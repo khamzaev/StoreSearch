@@ -11,6 +11,8 @@ class SearchViewController: UIViewController {
     
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var segmentedControl: UISegmentedControl!
+    
     
     var searchResults = [SearchResult] ()
     var hasSearched = false
@@ -20,7 +22,7 @@ class SearchViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.contentInset = UIEdgeInsets(top: 51, left: 0, bottom: 0, right: 0)
+        tableView.contentInset = UIEdgeInsets(top: 91, left: 0, bottom: 0, right: 0)
         
         var cellNib = UINib(nibName: TableView.CellIdentifiers.searchResultCell, bundle: nil)
         tableView.register(cellNib, forCellReuseIdentifier: TableView.CellIdentifiers.searchResultCell)
@@ -32,9 +34,25 @@ class SearchViewController: UIViewController {
         searchBar.becomeFirstResponder()
     }
     
+    
+    // MARK: - Actions
+    @IBAction func segmentChanged(_ sender: UISegmentedControl) {
+        performSearch()
+    }
+    
+    
+    
     // MARK: - Helper Methods
-    func iTunesURL(searchText: String) -> URL {
-        let urlString = String(format: "https:/itunes.apple.com/search?term=%@", searchText)
+    func iTunesURL(searchText: String, category: Int) -> URL {
+        let kind: String
+        switch category {
+        case 1: kind = "musicTrack"
+        case 2: kind = "software"
+        case 3: kind = "ebook"
+        default: kind = ""
+        }
+        let encodedText = searchText.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
+        let urlString = "https:/itunes.apple.com/search?term=\(encodedText)&limit=200&entity=\(kind)"
         let url = URL(string: urlString)
         return url!
     }
@@ -67,7 +85,7 @@ class SearchViewController: UIViewController {
 
 // MARK: - Search Bar Delegate
 extension SearchViewController: UISearchBarDelegate {
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+    func performSearch() {
         if !searchBar.text!.isEmpty {
             searchBar.resignFirstResponder()
             
@@ -78,7 +96,7 @@ extension SearchViewController: UISearchBarDelegate {
             hasSearched = true
             searchResults = []
             
-            let url = iTunesURL(searchText: searchBar.text!)
+            let url = iTunesURL(searchText: searchBar.text!, category: segmentedControl.selectedSegmentIndex)
             let session = URLSession.shared
             dataTask = session.dataTask(with: url) {data, response, error in
                 if let error = error  as NSError?, error.code == -999 {
@@ -105,6 +123,11 @@ extension SearchViewController: UISearchBarDelegate {
             }
             dataTask?.resume()
         }
+    }
+    
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        performSearch()
     }
 
     
