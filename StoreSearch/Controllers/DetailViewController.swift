@@ -96,6 +96,11 @@ class DetailViewController: UIViewController {
         downloadTask?.cancel()
     }
     
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        transitioningDelegate = self
+    }
+    
 
 }
 
@@ -108,5 +113,17 @@ extension DetailViewController: UIGestureRecognizerDelegate {
         shouldReceive touch: UITouch
     ) -> Bool {
         return (touch.view === self.view)
+    }
+}
+
+
+
+extension DetailViewController: UIViewControllerTransitioningDelegate {
+    func animationController(forPresented present: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        return BounceAnimationController()
+    }
+    
+    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        return SlideOutAnimationController()
     }
 }
