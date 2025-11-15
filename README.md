@@ -1,6 +1,5 @@
 # StoreSearch
-<img width="410" height="847" alt="image" src="https://github.com/user-attachments/assets/f1f65779-d55b-4872-9737-30ae795ae75b" />
-<img width="845" height="403" alt="image" src="https://github.com/user-attachments/assets/fe4003fa-e90a-448b-b940-dbcfd47f462b" />
+<img width="410" height="847" alt="image" src="https://github.com/user-attachments/assets/f1f65779-d55b-4872-9737-30ae795ae75b" /> 
 
 StoreSearch — iOS-приложение для поиска и отображения результатов (табличный интерфейс). 
 В проекте есть готовые xib-ячейки, Core Data модель и директории с контроллерами и моделям
